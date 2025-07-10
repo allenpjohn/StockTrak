@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if session.user_id %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h2 class="mb-4">Portfolio</h2>
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Shares</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in portfolio %}
+                    {% include "portfolio_row.html" %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-4">
+            <h5>Cash: <span class="badge bg-success">{{ cash | usd }}</span></h5>
+            <h4 class="mt-2">Total Account Value: <span class="badge bg-primary">{{ total | usd }}</span></h4>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="text-center mt-5">
+    <h1 class="display-3 mb-4">Welcome to StockTrak!</h1>
+    <p class="lead">Your personal stock trading simulator. Register or log in to start trading, view your portfolio, and track your history.</p>
+    <img src="https://images.unsplash.com/photo-1518183214770-9cffbec72538?auto=format&fit=crop&w=800&q=80" class="img-fluid rounded shadow mt-4" style="max-width: 500px;">
+</div>
+{% endif %}
+{% endblock %}

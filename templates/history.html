@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2 class="mb-4">Transaction & Cash History</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Symbol</th>
+            <th>Shares</th>
+            <th>Price</th>
+            <th>Cash Change</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if history|length == 0 %}
+        <tr><td colspan="6" class="text-center">No history to display.</td></tr>
+        {% else %}
+        {% for row in history %}
+        <tr>
+            <td>{{ row.date }}</td>
+            <td>{{ row.type }}</td>
+            <td>{{ row.symbol or '-' }}</td>
+            <td>{{ row.shares or '-' }}</td>
+            <td>{{ row.price | usd if row.price else '-' }}</td>
+            <td>{{ row.cash_change | usd if row.cash_change else '-' }}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
+</table>
+<nav aria-label="History pagination">
+  <ul class="pagination justify-content-center">
+    {% set start_page = max(1, page-4) %}
+    {% set end_page = min(max_page, start_page+9) %}
+    {% if page > 1 %}
+      <li class="page-item"><a class="page-link" href="?page={{ page-1 }}">&laquo;</a></li>
+    {% endif %}
+    {% for p in range(start_page, end_page+1) %}
+      <li class="page-item {% if p == page %}active{% endif %}"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+    {% endfor %}
+    {% if page < max_page %}
+      <li class="page-item"><a class="page-link" href="?page={{ page+1 }}">&raquo;</a></li>
+    {% endif %}
+  </ul>
+  <div class="text-center text-muted small">Page {{ page }} of {{ max_page }}</div>
+</nav>
+{% endblock %}

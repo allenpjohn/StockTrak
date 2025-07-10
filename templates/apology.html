@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
+    <div style="font-size: 5rem; color: #dc3545;">
+        <i class="bi bi-emoji-frown"></i>
+        <span>😢</span>
+    </div>
+    <h1 class="display-4 mt-3" style="color: #dc3545;">Oops!</h1>
+    <p class="lead mt-2">{{ bottom }}</p>
+    <a href="/" class="btn btn-outline-danger mt-4">Back to Home</a>
+</div>
+{% endblock %}

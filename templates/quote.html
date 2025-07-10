@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">Get Stock Quote</h2>
+        <form action="/quote" method="post">
+            <div class="mb-3">
+                <label for="symbol" class="form-label">Stock Symbol</label>
+                <input type="text" class="form-control" id="symbol" name="symbol" required>
+            </div>
+            <button type="submit" class="btn btn-info">Get Quote</button>
+        </form>
+        {% if quote %}
+        <div class="alert alert-success mt-4">
+            <strong>{{ quote.name }}</strong> ({{ quote.symbol }}) is trading at <strong>{{ quote.price|default(0) | usd }}</strong>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <ul class="list-group">
+                    <li class="list-group-item">Open: <strong>{{ quote.open|default(0) | usd }}</strong></li>
+                    <li class="list-group-item">Previous Close: <strong>{{ quote.prev_close|default(0) | usd }}</strong></li>
+                    <li class="list-group-item">Day Range: <strong>{{ quote.low|default(0) | usd }} - {{ quote.high|default(0) | usd }}</strong></li>
+                    <li class="list-group-item">52 Week Range: <strong>{% if quote.week52_low is not none and quote.week52_high is not none %}{{ quote.week52_low|default(0) | usd }} - {{ quote.week52_high|default(0) | usd }}{% else %}Unavailable{% endif %}</strong></li>
+                    <li class="list-group-item">Volume: <strong>{{ quote.volume|default(0) }}</strong></li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <canvas id="stockChart" height="200"></canvas>
+                {% if not quote.chart_dates or not quote.chart_closes %}
+                <div class="alert alert-warning mt-3">Chart data unavailable for this symbol or due to API limits.</div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% if error %}
+        <div class="alert alert-danger mt-4">
+            {{ error }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% if quote %}
+{% set chart_dates = quote.chart_dates|default([]) %}
+{% set chart_closes = quote.chart_closes|default([]) %}
+<script>
+window.chartDates = {{ chart_dates|tojson|safe }};
+window.chartCloses = {{ chart_closes|tojson|safe }};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/static/quote_script.js"></script>
+{% endif %}
+{% endblock %}

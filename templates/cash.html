@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="mb-4">Add or Subtract Cash</h2>
+        <div class="alert alert-info">Current Cash: <strong>{{ cash | usd }}</strong></div>
+        <form action="/cash" method="post">
+            <div class="mb-3">
+                <label for="amount" class="form-label">Amount (use negative to subtract)</label>
+                <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <h2 class="mb-4">Buy Options (Calls &amp; Puts)</h2>
+        {% if message %}
+        <div class="alert alert-success">{{ message }}</div>
+        {% endif %}
+        <form action="/options" method="post" class="mb-4">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-2">
+                    <label for="symbol" class="form-label">Stock Symbol</label>
+                    <input type="text" class="form-control" id="symbol" name="symbol" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="type" class="form-label">Type</label>
+                    <select class="form-select" id="type" name="type" required>
+                        <option value="CALL">Call</option>
+                        <option value="PUT">Put</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="strike" class="form-label">Strike Price</label>
+                    <input type="number" step="0.01" class="form-control" id="strike" name="strike" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="premium" class="form-label">Premium</label>
+                    <input type="number" step="0.01" class="form-control" id="premium" name="premium" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="expiration" class="form-label">Expiration</label>
+                    <input type="date" class="form-control" id="expiration" name="expiration" required>
+                </div>
+                <div class="col-md-1">
+                    <label for="contracts" class="form-label">Contracts</label>
+                    <input type="number" class="form-control" id="contracts" name="contracts" min="1" required>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">Buy</button>
+                </div>
+            </div>
+        </form>
+        <h4>Open Options Positions</h4>
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Symbol</th>
+                    <th>Type</th>
+                    <th>Strike</th>
+                    <th>Premium</th>
+                    <th>Expiration</th>
+                    <th>Contracts</th>
+                    <th>Open Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in options %}
+                <tr>
+                    <td>{{ o.symbol }}</td>
+                    <td>{{ o.type }}</td>
+                    <td>{{ o.strike | usd }}</td>
+                    <td>{{ o.premium | usd }}</td>
+                    <td>{{ o.expiration }}</td>
+                    <td>{{ o.contracts }}</td>
+                    <td>{{ o.open_date }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7" class="text-center">No open options</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
